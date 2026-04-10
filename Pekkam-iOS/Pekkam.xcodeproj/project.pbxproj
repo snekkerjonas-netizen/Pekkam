@@ -1,0 +1,402 @@
+// \!$*UTF8*$\!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1001001001010101 /* PekkamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010100 /* PekkamApp.swift */; };
+		A1001001001010102 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010101 /* ContentView.swift */; };
+		A1001001001010103 /* AppTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010102 /* AppTier.swift */; };
+		A1001001001010104 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010103 /* PurchaseManager.swift */; };
+		A1001001001010105 /* GlassModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010104 /* GlassModifier.swift */; };
+		A1001001001010106 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010105 /* LocationManager.swift */; };
+		A1001001001010107 /* CompassManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010106 /* CompassManager.swift */; };
+		A1001001001010108 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010107 /* CameraManager.swift */; };
+		A1001001001010109 /* PhotoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010108 /* PhotoMetadata.swift */; };
+		A100100100101010A /* ImageOverlayRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010109 /* ImageOverlayRenderer.swift */; };
+		A100100100101010B /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100100100101010A /* CameraPreviewView.swift */; };
+		A100100100101010C /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100100100101010B /* CameraView.swift */; };
+		A100100100101010D /* IndoorAnnotationPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100100100101010C /* IndoorAnnotationPanel.swift */; };
+		A100100100101010E /* DirectionMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100100100101010D /* DirectionMapView.swift */; };
+		A100100100101010F /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100100100101010E /* GalleryView.swift */; };
+		A1001001001010110 /* PhotoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100100100101010F /* PhotoDetailView.swift */; };
+		A1001001001010111 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1001001001010110 /* PaywallView.swift */; };
+		A1001001001010112 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1001001001010111 /* Assets.xcassets */; };
+		A1001001001010113 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A1001001001010112 /* Info.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1001000001010100 /* Pekkam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pekkam.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1001001001010100 /* PekkamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PekkamApp.swift; sourceTree = "<group>"; };
+		A1001001001010101 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A1001001001010102 /* AppTier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTier.swift; sourceTree = "<group>"; };
+		A1001001001010103 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		A1001001001010104 /* GlassModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassModifier.swift; sourceTree = "<group>"; };
+		A1001001001010105 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		A1001001001010106 /* CompassManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassManager.swift; sourceTree = "<group>"; };
+		A1001001001010107 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		A1001001001010108 /* PhotoMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMetadata.swift; sourceTree = "<group>"; };
+		A1001001001010109 /* ImageOverlayRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOverlayRenderer.swift; sourceTree = "<group>"; };
+		A100100100101010A /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		A100100100101010B /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		A100100100101010C /* IndoorAnnotationPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndoorAnnotationPanel.swift; sourceTree = "<group>"; };
+		A100100100101010D /* DirectionMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionMapView.swift; sourceTree = "<group>"; };
+		A100100100101010E /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		A100100100101010F /* PhotoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailView.swift; sourceTree = "<group>"; };
+		A1001001001010110 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		A1001001001010111 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1001001001010112 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1001000000010100 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1000FFF000010100 = {
+			isa = PBXGroup;
+			children = (
+				A1001000100010100 /* Pekkam */,
+				A1001000000010101 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1001000000010101 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1001000001010100 /* Pekkam.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1001000100010100 /* Pekkam */ = {
+			isa = PBXGroup;
+			children = (
+				A1001001001010100 /* PekkamApp.swift */,
+				A1001001001010101 /* ContentView.swift */,
+				A1001001001010102 /* AppTier.swift */,
+				A1001001001010103 /* PurchaseManager.swift */,
+				A1001001001010104 /* GlassModifier.swift */,
+				A1001001001010105 /* LocationManager.swift */,
+				A1001001001010106 /* CompassManager.swift */,
+				A1001001001010107 /* CameraManager.swift */,
+				A1001001001010108 /* PhotoMetadata.swift */,
+				A1001001001010109 /* ImageOverlayRenderer.swift */,
+				A100100100101010A /* CameraPreviewView.swift */,
+				A100100100101010B /* CameraView.swift */,
+				A100100100101010C /* IndoorAnnotationPanel.swift */,
+				A100100100101010D /* DirectionMapView.swift */,
+				A100100100101010E /* GalleryView.swift */,
+				A100100100101010F /* PhotoDetailView.swift */,
+				A1001001001010110 /* PaywallView.swift */,
+				A1001001001010111 /* Assets.xcassets */,
+				A1001001001010112 /* Info.plist */,
+			);
+			path = Pekkam;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1001000000010100 /* Pekkam */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1001001001010113 /* Build configuration list for PBXNativeTarget "Pekkam" */;
+			buildPhases = (
+				A1000FFF000010100 /* Sources */,
+				A1001000000010100 /* Frameworks */,
+				A1001000100010100 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Pekkam;
+			productName = Pekkam;
+			productReference = A1001000001010100 /* Pekkam.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1000FFF000010100 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					A1001000000010100 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = A1000FFF100010100 /* Build configuration list for PBXProject "Pekkam" */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1000FFF000010100;
+			productRefGroup = A1001000000010101 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1001000000010100 /* Pekkam */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1001000100010100 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1001001001010112 /* Assets.xcassets in Resources */,
+				A1001001001010113 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1000FFF000010100 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1001001001010101 /* PekkamApp.swift in Sources */,
+				A1001001001010102 /* ContentView.swift in Sources */,
+				A1001001001010103 /* AppTier.swift in Sources */,
+				A1001001001010104 /* PurchaseManager.swift in Sources */,
+				A1001001001010105 /* GlassModifier.swift in Sources */,
+				A1001001001010106 /* LocationManager.swift in Sources */,
+				A1001001001010107 /* CompassManager.swift in Sources */,
+				A1001001001010108 /* CameraManager.swift in Sources */,
+				A1001001001010109 /* PhotoMetadata.swift in Sources */,
+				A100100100101010A /* ImageOverlayRenderer.swift in Sources */,
+				A100100100101010B /* CameraPreviewView.swift in Sources */,
+				A100100100101010C /* CameraView.swift in Sources */,
+				A100100100101010D /* IndoorAnnotationPanel.swift in Sources */,
+				A100100100101010E /* DirectionMapView.swift in Sources */,
+				A100100100101010F /* GalleryView.swift in Sources */,
+				A1001001001010110 /* PhotoDetailView.swift in Sources */,
+				A1001001001010111 /* PaywallView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A1001001000110100 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_DIALECT = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_LEVEL = c17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1001001000110101 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_DIALECT = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_LEVEL = c17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZE_FOR_SIZE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A1001001001110100 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				BUNDLE_LOADER = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Pekkam;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLandscapeLeft UIInterfaceOrientationLandscapeLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pekkam.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1001001001110101 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				BUNDLE_LOADER = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Pekkam;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLandscapeLeft UIInterfaceOrientationLandscapeLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pekkam.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1000FFF100010100 /* Build configuration list for PBXProject "Pekkam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1001001000110100 /* Debug */,
+				A1001001000110101 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1001001001110100 /* Build configuration list for PBXNativeTarget "Pekkam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1001001001110100 /* Debug */,
+				A1001001001110101 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A1000FFF000010100 /* Project object */;
+}

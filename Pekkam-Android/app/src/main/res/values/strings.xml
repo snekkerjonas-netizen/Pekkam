@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pekkam</string>
+    <string name="app_description">Dokumenterings kamera</string>
+
+    <\!-- Camera -->
+    <string name="camera_title">Kamera</string>
+    <string name="capture_photo">Ta foto</string>
+    <string name="flip_camera">Flip</string>
+    <string name="map_button">Kart</string>
+
+    <\!-- Gallery -->
+    <string name="gallery_title">Galleriet</string>
+    <string name="photo_details">Fotodetaljer</string>
+
+    <\!-- Compass -->
+    <string name="compass_heading">Retning</string>
+    <string name="compass_accuracy">Nøyaktighet</string>
+    <string name="compass_calibrate">Kaliber kompass</string>
+
+    <\!-- GPS -->
+    <string name="gps_latitude">Breddegrad</string>
+    <string name="gps_longitude">Lengdegrad</string>
+    <string name="gps_accuracy">Nøyaktighet</string>
+
+    <\!-- Indoor -->
+    <string name="indoor_floor">Etasje</string>
+    <string name="indoor_room">Rom</string>
+    <string name="indoor_location">Innvendig lokalisering</string>
+
+    <\!-- Paywall -->
+    <string name="tier_free">Gratis</string>
+    <string name="tier_compass">Kompass</string>
+    <string name="tier_full">Full</string>
+    <string name="price_compass">39 kr</string>
+    <string name="price_full">49 kr</string>
+    <string name="price_upgrade">10 kr</string>
+    <string name="purchase_button">Kjøp</string>
+    <string name="upgrade_button">Oppgrader til Full</string>
+    <string name="restore_purchases">Gjenopprett kjøp</string>
+
+    <\!-- Permissions -->
+    <string name="permission_camera">Kamera</string>
+    <string name="permission_location">Lokasjon</string>
+</resources>
