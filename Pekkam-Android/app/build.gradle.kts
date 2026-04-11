@@ -20,7 +20,7 @@ android {
             useSupportLibrary = true
         }
 
-        manifestPlaceholders["MAPS_API_KEY"] = "YOUR_GOOGLE_MAPS_API_KEY"
+        manifestPlaceholders["MAPS_API_KEY"] = "AIzaSyDbG1OU1KFVvwuGLo2CNA04HTUK7ZpXCig"
     }
 
     buildTypes {
