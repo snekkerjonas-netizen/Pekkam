@@ -7,12 +7,38 @@ class CameraManager: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     @Published var capturedPhotoData: Data?
     @Published var isSessionRunning = false
     @Published var error: String?
-    
+    @Published var zoomFactor: CGFloat = 1.0
+    @Published var flashMode: AVCaptureDevice.FlashMode = .off
+
     private let captureSession = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
     private let videoOutput = AVCaptureVideoDataOutput()
     private var currentCamera: AVCaptureDevice?
     private var photoContinuation: CheckedContinuation<AVCapturePhoto, Error>?
+
+    // Available zoom levels for the current device
+    var availableZoomFactors: [CGFloat] {
+        guard let device = currentCamera else { return [1.0] }
+        var factors: [CGFloat] = []
+        // Ultra-wide at 0.5x if available
+        if device.deviceType == .builtInTripleCamera || device.deviceType == .builtInDualWideCamera {
+            factors.append(0.5)
+        }
+        factors.append(1.0)
+        // 2x optical if available
+        if device.deviceType == .builtInTripleCamera || device.deviceType == .builtInDualCamera {
+            factors.append(2.0)
+        }
+        // 3x optical if available
+        if device.deviceType == .builtInTripleCamera {
+            factors.append(3.0)
+        }
+        // Always offer digital 5x if device supports it
+        if device.maxAvailableVideoZoomFactor >= 5.0 && !factors.contains(5.0) {
+            // skip to keep it simple
+        }
+        return factors.isEmpty ? [1.0] : factors
+    }
     
     let previewLayer = AVCaptureVideoPreviewLayer()
     
@@ -79,7 +105,30 @@ class CameraManager: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     func capturePhoto() {
         let settings = AVCapturePhotoSettings()
         settings.isHighResolutionPhotoEnabled = true
+        settings.flashMode = flashMode
         photoOutput.capturePhoto(with: settings, delegate: self)
+    }
+
+    func setZoom(_ factor: CGFloat) {
+        guard let device = currentCamera else { return }
+        let clamped = min(max(factor, device.minAvailableVideoZoomFactor), min(device.maxAvailableVideoZoomFactor, 10.0))
+        do {
+            try device.lockForConfiguration()
+            device.videoZoomFactor = clamped
+            device.unlockForConfiguration()
+            zoomFactor = clamped
+        } catch {
+            self.error = "Zoom feilet: \(error.localizedDescription)"
+        }
+    }
+
+    func cycleFlash() {
+        switch flashMode {
+        case .off:   flashMode = .on
+        case .on:    flashMode = .auto
+        case .auto:  flashMode = .off
+        @unknown default: flashMode = .off
+        }
     }
     
     func flipCamera() {

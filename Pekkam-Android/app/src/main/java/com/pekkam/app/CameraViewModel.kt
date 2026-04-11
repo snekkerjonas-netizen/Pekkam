@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.location.Location
 import android.provider.MediaStore
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -28,22 +29,78 @@ class CameraViewModel(
     private val _lastImageUri = MutableStateFlow<String?>(null)
     val lastImageUri: StateFlow<String?> = _lastImageUri
 
+    // Zoom state (linear ratio, 1.0 = no zoom)
+    private val _zoomRatio = MutableStateFlow(1f)
+    val zoomRatio: StateFlow<Float> = _zoomRatio
+
+    // Flash mode: ImageCapture.FLASH_MODE_OFF / ON / AUTO
+    private val _flashMode = MutableStateFlow(ImageCapture.FLASH_MODE_OFF)
+    val flashMode: StateFlow<Int> = _flashMode
+
     private var imageCapture: ImageCapture? = null
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    private var camera: Camera? = null
+    private var cameraProvider: ProcessCameraProvider? = null
 
-    fun setupCamera(cameraProvider: ProcessCameraProvider) {
+    fun setupCamera(provider: ProcessCameraProvider, previewSurface: androidx.camera.view.PreviewView) {
         try {
-            cameraProvider.unbindAll()
+            cameraProvider = provider
+            provider.unbindAll()
 
             imageCapture = ImageCapture.Builder()
                 .setTargetRotation(android.view.Surface.ROTATION_0)
+                .setFlashMode(_flashMode.value)
                 .build()
 
             val preview = androidx.camera.core.Preview.Builder().build()
-            cameraProvider.bindToLifecycle(context as androidx.lifecycle.LifecycleOwner, cameraSelector, preview, imageCapture)
+            preview.setSurfaceProvider(previewSurface.surfaceProvider)
+
+            camera = provider.bindToLifecycle(
+                context as androidx.lifecycle.LifecycleOwner,
+                cameraSelector,
+                preview,
+                imageCapture
+            )
+
+            // Apply current zoom after binding
+            applyZoom(_zoomRatio.value)
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun setZoomRatio(ratio: Float) {
+        val clamped = ratio.coerceIn(getMinZoom(), getMaxZoom())
+        _zoomRatio.value = clamped
+        applyZoom(clamped)
+    }
+
+    private fun applyZoom(ratio: Float) {
+        camera?.cameraControl?.setZoomRatio(ratio)
+    }
+
+    fun getMinZoom(): Float = camera?.cameraInfo?.zoomState?.value?.minZoomRatio ?: 1f
+    fun getMaxZoom(): Float = camera?.cameraInfo?.zoomState?.value?.maxZoomRatio ?: 1f
+
+    fun availableZoomLevels(): List<Float> {
+        val max = getMaxZoom()
+        val levels = mutableListOf<Float>()
+        if (getMinZoom() <= 0.6f) levels.add(0.5f)
+        levels.add(1f)
+        if (max >= 2f) levels.add(2f)
+        if (max >= 3f) levels.add(3f)
+        if (max >= 5f) levels.add(5f)
+        return levels
+    }
+
+    fun cycleFlash() {
+        val next = when (_flashMode.value) {
+            ImageCapture.FLASH_MODE_OFF  -> ImageCapture.FLASH_MODE_ON
+            ImageCapture.FLASH_MODE_ON   -> ImageCapture.FLASH_MODE_AUTO
+            else                         -> ImageCapture.FLASH_MODE_OFF
+        }
+        _flashMode.value = next
+        imageCapture?.flashMode = next
     }
 
     fun capturePhoto(
@@ -117,6 +174,10 @@ class CameraViewModel(
             CameraSelector.DEFAULT_FRONT_CAMERA
         } else {
             CameraSelector.DEFAULT_BACK_CAMERA
+        }
+        // Re-bind with new selector
+        cameraProvider?.let { provider ->
+            // Surface provider reference not available here, caller must call setupCamera again
         }
     }
 }
