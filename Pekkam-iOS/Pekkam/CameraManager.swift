@@ -29,9 +29,13 @@ class CameraManager: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
                 captureSession.sessionPreset = .photo
             }
             
-            let selectedCamera = selectBestCamera()
+            guard let selectedCamera = selectBestCamera() else {
+                // No camera available (e.g. simulator without camera)
+                captureSession.commitConfiguration()
+                return
+            }
             currentCamera = selectedCamera
-            
+
             let input = try AVCaptureDeviceInput(device: selectedCamera)
             if captureSession.canAddInput(input) {
                 captureSession.addInput(input)
@@ -57,16 +61,19 @@ class CameraManager: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         }
     }
     
-    private func selectBestCamera() -> AVCaptureDevice {
-        // Prefer triple camera, then dual wide, then wide
+    private func selectBestCamera() -> AVCaptureDevice? {
+        // Prefer triple camera, then dual wide, then wide angle, then any video device
         if let device = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: .back) {
             return device
         }
         if let device = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) {
             return device
         }
-        return AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) 
-            ?? AVCaptureDevice.default(for: .video)\!
+        if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
+            return device
+        }
+        // Fallback: any available video device (works on simulator too)
+        return AVCaptureDevice.default(for: .video)
     }
     
     func capturePhoto() {

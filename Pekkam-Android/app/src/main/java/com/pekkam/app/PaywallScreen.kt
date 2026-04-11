@@ -172,7 +172,7 @@ fun TierCard(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        if (\!isSelected) {
+        if (!isSelected) {
             Button(
                 onClick = onClick,
                 modifier = Modifier.fillMaxWidth()

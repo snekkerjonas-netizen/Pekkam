@@ -75,7 +75,7 @@ struct PhotoDetailView: View {
                                     Spacer()
                                     Text(String(floor))
                                 }
-                                if let room = room, \!room.isEmpty {
+                                if let room = room, !room.isEmpty {
                                     HStack {
                                         Text("Rom:")
                                         Spacer()
@@ -122,17 +122,16 @@ struct PhotoDetailView: View {
         }
         
         location = asset.location
-        
+
         // Try to extract EXIF metadata
-        let options = PHImageRequestOptions()
-        options.synchronous = true
+        let exifOptions = PHImageRequestOptions()
+        exifOptions.isSynchronous = false
+        exifOptions.isNetworkAccessAllowed = false
         PHImageManager.default().requestImageDataAndOrientation(
             for: asset,
-            options: options
-        ) { data, _, _, info in
-            if let data = data {
-                // Extract metadata would go here
-            }
+            options: exifOptions
+        ) { data, _, _, _ in
+            // Metadata extraction placeholder - heading/floor stored in UserComment
         }
     }
 }

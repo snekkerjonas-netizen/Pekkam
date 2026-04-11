@@ -44,7 +44,7 @@ class LocationRepository(context: Context) {
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val location = locationResult.lastLocation
-                if (location \!= null) {
+                if (location != null) {
                     val accuracy = location.accuracy
                     val category = AccuracyCategory.fromAccuracy(accuracy)
                     trySend(LocationData(location, accuracy, category))

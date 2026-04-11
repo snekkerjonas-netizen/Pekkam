@@ -147,7 +147,7 @@ struct TierCard: View {
                 }
             }
             
-            if isActive && \!isSelected {
+            if isActive && !isSelected {
                 Button(action: action) {
                     Text("Kjøp")
                         .frame(maxWidth: .infinity)

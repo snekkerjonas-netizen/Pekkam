@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<\!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -18,43 +18,25 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<true/>
-	</dict>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>UILaunchScreen</key>
-	<dict/>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Pekkam trenger kameratilgang for å ta bilder</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Pekkam bruker GPS for å legge inn posisjon i bildene</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Pekkam bruker GPS for å legge inn posisjon i bildene</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Pekkam bruker bevegelsessensorer for kompassfunksjon</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Pekkam lagrer bilder i ditt Pekkam-album</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Pekkam lagrer bilder i ditt Pekkam-album</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UISupportedInterfaceOrientationsIPad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>Vi trenger kameratilgang for å ta dokumentasjonsfoto</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Vi trenger posisjonstilgang for å lagre GPS-data i fotene dine</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Vi trenger posisjonstilgang for å lagre GPS-data i fotene dine</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Vi trenger tilgang til fotoalbumet ditt for å lagre dokumentasjonsfoto</string>
-	<key>NSPhotoLibraryAddOnlyUsageDescription</key>
-	<string>Vi trenger tilgang for å lagre dokumentasjonsfoto</string>
-	<key>MinimumOSVersion</key>
-	<string>17.0</string>
 </dict>
 </plist>

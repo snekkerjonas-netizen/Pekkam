@@ -1,0 +1,58 @@
+name: Pekkam
+options:
+  bundleIdPrefix: com.pekkam
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+  groupOrdering:
+    - order: [Pekkam, Resources, Products]
+
+targets:
+  Pekkam:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Pekkam
+        type: group
+      - path: Resources
+        type: group
+    info:
+      path: Info.plist
+      properties:
+        UILaunchStoryboardName: LaunchScreen
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSCameraUsageDescription: "Pekkam trenger kameratilgang for å ta bilder"
+        NSLocationWhenInUseUsageDescription: "Pekkam bruker GPS for å legge inn posisjon i bildene"
+        NSLocationAlwaysAndWhenInUseUsageDescription: "Pekkam bruker GPS for å legge inn posisjon i bildene"
+        NSPhotoLibraryUsageDescription: "Pekkam lagrer bilder i ditt Pekkam-album"
+        NSPhotoLibraryAddUsageDescription: "Pekkam lagrer bilder i ditt Pekkam-album"
+        NSMotionUsageDescription: "Pekkam bruker bevegelsessensorer for kompassfunksjon"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pekkam.app
+        SWIFT_VERSION: 5.0
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+        MARKETING_VERSION: 1.0
+        CURRENT_PROJECT_VERSION: 1
+        INFOPLIST_FILE: Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    dependencies:
+      - framework: StoreKit.framework
+        embed: false
+      - framework: AVFoundation.framework
+        embed: false
+      - framework: CoreLocation.framework
+        embed: false
+      - framework: MapKit.framework
+        embed: false
+      - framework: Photos.framework
+        embed: false
+      - framework: CoreMotion.framework
+        embed: false
+      - framework: ImageIO.framework
+        embed: false

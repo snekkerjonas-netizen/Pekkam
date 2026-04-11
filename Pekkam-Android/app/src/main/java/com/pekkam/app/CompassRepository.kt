@@ -66,10 +66,10 @@ class CompassRepository(context: Context) {
             override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
         }
 
-        if (accelerometer \!= null) {
+        if (accelerometer != null) {
             sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_UI)
         }
-        if (magnetometer \!= null) {
+        if (magnetometer != null) {
             sensorManager.registerListener(sensorEventListener, magnetometer, SensorManager.SENSOR_DELAY_UI)
         }
 

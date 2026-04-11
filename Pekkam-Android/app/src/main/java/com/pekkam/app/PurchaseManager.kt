@@ -10,7 +10,7 @@ class PurchaseManager(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences("pekkam_prefs", Context.MODE_PRIVATE)
     private val billingClient: BillingClient = BillingClient.newBuilder(context)
         .setListener { billingResult, purchases ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases \!= null) {
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
                 for (purchase in purchases) {
                     handlePurchase(purchase)
                 }

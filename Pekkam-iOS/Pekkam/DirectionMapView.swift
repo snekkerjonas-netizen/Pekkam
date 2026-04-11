@@ -9,8 +9,8 @@ struct DirectionMapView: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.showsUserLocation = true
-        mapView.zoomEnabled = true
-        mapView.scrollEnabled = true
+        mapView.isZoomEnabled = true
+        mapView.isScrollEnabled = true
         
         let region = MKCoordinateRegion(
             center: location.coordinate,

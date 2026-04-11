@@ -74,23 +74,23 @@ class CameraViewModel(
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val uri = outputFileResults.savedUri
-                    if (uri \!= null) {
+                    if (uri != null) {
                         try {
                             val pfd = context.contentResolver.openFileDescriptor(uri, "w")
-                            if (pfd \!= null) {
+                            if (pfd != null) {
                                 val exif = ExifInterface(pfd.fileDescriptor)
 
-                                if (_tier.value.hasGPS && location \!= null) {
+                                if (_tier.value.hasGPS && location != null) {
                                     exif.setLatLong(location.latitude, location.longitude)
                                     exif.setAttribute(ExifInterface.TAG_GPS_DOP, location.accuracy.toString())
                                 }
 
-                                if (_tier.value.hasCompass && heading \!= null) {
+                                if (_tier.value.hasCompass && heading != null) {
                                     exif.setAttribute("PekkamHeading", heading.toString())
-                                    if (floor \!= null) {
+                                    if (floor != null) {
                                         exif.setAttribute("PekkamFloor", floor.toString())
                                     }
-                                    if (room \!= null) {
+                                    if (room != null) {
                                         exif.setAttribute("PekkamRoom", room)
                                     }
                                 }

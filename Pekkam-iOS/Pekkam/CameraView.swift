@@ -110,7 +110,7 @@ struct CameraView: View {
             .padding(12)
             
             // Indoor button (floating)
-            if locationManager.floor \!= nil || purchaseManager.currentTier.hasIndoorPanel {
+            if locationManager.floor != nil || purchaseManager.currentTier.hasIndoorPanel {
                 VStack {
                     HStack {
                         Spacer()

@@ -53,8 +53,8 @@ fun GalleryScreen(purchaseManager: PurchaseManager) {
             }
         }
 
-        if (selectedItem \!= null && tier.hasGalleryDetail) {
-            PhotoDetailScreen(item = selectedItem\!\!) {
+        if (selectedItem != null && tier.hasGalleryDetail) {
+            PhotoDetailScreen(item = selectedItem!!) {
                 selectedItem = null
             }
         }
