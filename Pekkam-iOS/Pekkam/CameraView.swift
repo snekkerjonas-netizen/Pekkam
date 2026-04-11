@@ -81,7 +81,12 @@ struct CameraView: View {
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(.white)
                     .frame(width: 44, height: 44)
-                    .glassPanel()
+                    .background(Color.black.opacity(0.55))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                    )
             }
 
             // GPS indicator
@@ -132,7 +137,12 @@ struct CameraView: View {
                     .font(.system(size: 20))
                     .foregroundColor(cameraManager.flashMode == .off ? .white : .yellow)
                     .frame(width: 44, height: 44)
-                    .glassPanel()
+                    .background(Color.black.opacity(0.55))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                    )
             }
         }
         .padding(.horizontal, 16)
@@ -175,7 +185,9 @@ struct CameraView: View {
                         .font(.system(size: 24))
                         .foregroundColor(.white)
                         .frame(width: 50, height: 50)
-                        .glassPanel()
+                        .background(Color.black.opacity(0.55))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.18), lineWidth: 1))
                 }
             } else {
                 Button(action: { showPaywall = true }) {
@@ -183,7 +195,9 @@ struct CameraView: View {
                         .font(.system(size: 24))
                         .foregroundColor(.white.opacity(0.4))
                         .frame(width: 50, height: 50)
-                        .glassPanel()
+                        .background(Color.black.opacity(0.55))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.18), lineWidth: 1))
                 }
             }
 
@@ -209,7 +223,9 @@ struct CameraView: View {
                     .font(.system(size: 24))
                     .foregroundColor(.white)
                     .frame(width: 50, height: 50)
-                    .glassPanel()
+                    .background(Color.black.opacity(0.55))
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.18), lineWidth: 1))
             }
         }
         .padding(.horizontal, 24)

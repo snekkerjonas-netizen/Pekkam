@@ -15,7 +15,7 @@ struct ContentView: View {
             
             GalleryView()
                 .tabItem {
-                    Label("Galleriet", systemImage: "photo.on.rectangle.angled")
+                    Label("Galleri", systemImage: "photo.on.rectangle.angled")
                 }
                 .tag(1)
         }

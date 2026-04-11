@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		09BA1D5DDA36DD4377EB39C4 /* PhotoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4B79E26A69DCE94EDCF833 /* PhotoDetailView.swift */; };
 		13B0AAF42826D1B3A62A92DF /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726DCFCC5CDB1CA985347F34 /* CameraPreviewView.swift */; };
+		1C2FB7D6FFA5C4C1F83C582C /* SettingsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3574F9DB69DBE467A76882 /* SettingsMenuView.swift */; };
 		24A0C5DF15C5AA9B1A3F9094 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E50686B5F974116CD59EC /* LocationManager.swift */; };
 		24C3979D885C7D427F18808B /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69198C162A030191EE9B99EC /* Photos.framework */; };
 		2D1A37866ABFAA5D514FDA62 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76CC52CEBEFBAD16882003CC /* ImageIO.framework */; };
@@ -61,6 +62,7 @@
 		CD8A607DA2EA881AB9413487 /* PekkamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PekkamApp.swift; sourceTree = "<group>"; };
 		D8F9A865C109F756B6BD5031 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = StoreKit.framework; sourceTree = "<group>"; };
 		ED4B79E26A69DCE94EDCF833 /* PhotoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailView.swift; sourceTree = "<group>"; };
+		EE3574F9DB69DBE467A76882 /* SettingsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 				ED4B79E26A69DCE94EDCF833 /* PhotoDetailView.swift */,
 				4AC22B7C59CEE85D9441131B /* PhotoMetadata.swift */,
 				93B0A889EB9FF96DF605BCD1 /* PurchaseManager.swift */,
+				EE3574F9DB69DBE467A76882 /* SettingsMenuView.swift */,
 			);
 			path = Pekkam;
 			sourceTree = "<group>";
@@ -230,6 +233,7 @@
 				09BA1D5DDA36DD4377EB39C4 /* PhotoDetailView.swift in Sources */,
 				5DE1F3963E19C647806966D7 /* PhotoMetadata.swift in Sources */,
 				8B5FA280ED5D0E4610DE99C4 /* PurchaseManager.swift in Sources */,
+				1C2FB7D6FFA5C4C1F83C582C /* SettingsMenuView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

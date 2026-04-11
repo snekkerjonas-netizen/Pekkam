@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsMenuView: View {
     @EnvironmentObject var purchaseManager: PurchaseManager
+    @AppStorage("appAppearance") private var appAppearance: String = "system"
     var onClose: () -> Void
     var onUpgrade: () -> Void
 
@@ -66,6 +67,10 @@ struct SettingsMenuView: View {
                                title: "Uten vannmerke",
                                subtitle: "Rene bilder uten logo",
                                unlocked: !purchaseManager.currentTier.hasWatermark)
+
+                    sectionHeader("Utseende")
+
+                    appearancePicker
 
                     sectionHeader("App")
 
@@ -185,6 +190,44 @@ struct SettingsMenuView: View {
             .padding(.vertical, 12)
         }
         .buttonStyle(.plain)
+    }
+
+    // MARK: – Appearance picker
+
+    private var appearancePicker: some View {
+        let options: [(id: String, icon: String, label: String)] = [
+            ("system", "circle.lefthalf.filled", "System"),
+            ("light",  "sun.max.fill",           "Lyst"),
+            ("dark",   "moon.fill",              "Mørkt"),
+        ]
+        return HStack(spacing: 0) {
+            ForEach(options, id: \.id) { option in
+                let isSelected = appAppearance == option.id
+                Button(action: { appAppearance = option.id }) {
+                    VStack(spacing: 4) {
+                        Image(systemName: option.icon)
+                            .font(.system(size: 15))
+                            .foregroundColor(isSelected ? .black : .white)
+                        Text(option.label)
+                            .font(.caption2)
+                            .foregroundColor(isSelected ? .black : .white.opacity(0.7))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(isSelected ? Color.white : Color.clear)
+                }
+                .buttonStyle(.plain)
+                if option.id != options.last?.id {
+                    Divider()
+                        .frame(height: 30)
+                        .overlay(Color.white.opacity(0.15))
+                }
+            }
+        }
+        .background(Color.white.opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal, 24)
+        .padding(.top, 4)
     }
 
     // MARK: – Computed helpers
