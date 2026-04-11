@@ -20,6 +20,7 @@
 		5DE1F3963E19C647806966D7 /* PhotoMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC22B7C59CEE85D9441131B /* PhotoMetadata.swift */; };
 		65D5855BB6864BC8A1B913C8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEFAAC0B3228435A025E2823 /* AVFoundation.framework */; };
 		7A8A761612D58A2297EB9ED9 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C98B723A3FA246AF711F48F /* CoreMotion.framework */; };
+		8128179A8F758B4A3E790BBD /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B990B67E735380BAF1574992 /* AuthManager.swift */; };
 		8B5FA280ED5D0E4610DE99C4 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B0A889EB9FF96DF605BCD1 /* PurchaseManager.swift */; };
 		A339191791B44D64CEEAD54E /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E63C3BD9A3A9520AC5AB4BD /* PaywallView.swift */; };
 		B4AAA83F35E9E727C03032D5 /* PekkamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A607DA2EA881AB9413487 /* PekkamApp.swift */; };
@@ -58,6 +59,7 @@
 		9B047305630603A4A615CBCA /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		A6E98923A68E485A28ECC3E7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA0E6B89F57EAF1A0646C1EF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CoreLocation.framework; sourceTree = "<group>"; };
+		B990B67E735380BAF1574992 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		BEFAAC0B3228435A025E2823 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVFoundation.framework; sourceTree = "<group>"; };
 		C28A879FF2C918FDAFA869AA /* GlassModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassModifier.swift; sourceTree = "<group>"; };
 		CD8A607DA2EA881AB9413487 /* PekkamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PekkamApp.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			children = (
 				EA6608D0EA6CAE4F754BF9C0 /* AppSettings.swift */,
 				3CB0FB897AB8D610C19F6A4D /* AppTier.swift */,
+				B990B67E735380BAF1574992 /* AuthManager.swift */,
 				72CE17E9606D5BD6ACF07294 /* CameraManager.swift */,
 				726DCFCC5CDB1CA985347F34 /* CameraPreviewView.swift */,
 				9B047305630603A4A615CBCA /* CameraView.swift */,
@@ -221,6 +224,7 @@
 			files = (
 				F4346524A56AEAECB5C6C091 /* AppSettings.swift in Sources */,
 				CE4FB068FF9C1EDDA9E4DB48 /* AppTier.swift in Sources */,
+				8128179A8F758B4A3E790BBD /* AuthManager.swift in Sources */,
 				4E7FCC9F7EE14E909E5990BB /* CameraManager.swift in Sources */,
 				13B0AAF42826D1B3A62A92DF /* CameraPreviewView.swift in Sources */,
 				BFC5FE74ADF319BB43021F76 /* CameraView.swift in Sources */,

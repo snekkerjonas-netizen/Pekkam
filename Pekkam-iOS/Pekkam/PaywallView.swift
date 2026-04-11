@@ -76,11 +76,28 @@ struct PaywallView: View {
                 
                 Spacer()
                 
+                // Error / success feedback
+                if let error = purchaseManager.error {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 20)
+                }
+                if let success = purchaseManager.purchaseSuccess {
+                    Text(success)
+                        .font(.caption)
+                        .foregroundColor(.green)
+                        .padding(.horizontal, 20)
+                }
+                if purchaseManager.isLoading {
+                    ProgressView()
+                        .tint(.white)
+                }
+
                 // Restore purchases
                 Button(action: {
-                    Task {
-                        await purchaseManager.restorePurchases()
-                    }
+                    Task { await purchaseManager.restorePurchases() }
                 }) {
                     Text("Gjenopprett kjøp")
                         .font(.caption)

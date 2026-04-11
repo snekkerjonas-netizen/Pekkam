@@ -97,6 +97,11 @@ dependencies {
     // Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
 
+    // Auth – Credential Manager + Google Sign-In
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

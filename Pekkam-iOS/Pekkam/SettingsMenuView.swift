@@ -3,9 +3,15 @@ import SwiftUI
 struct SettingsMenuView: View {
     @EnvironmentObject var purchaseManager: PurchaseManager
     @EnvironmentObject var appSettings: AppSettings
+    @EnvironmentObject var authManager: AuthManager
     @AppStorage("appAppearance") private var appAppearance: String = "system"
     var onClose: () -> Void
     var onUpgrade: () -> Void
+
+    // DEV MODE – fjernes før lansering
+    @State private var titleTapCount = 0
+    @State private var showDevBanner = false
+    // END DEV MODE
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -14,9 +20,19 @@ struct SettingsMenuView: View {
                 Image(systemName: "camera.aperture")
                     .font(.title2.weight(.bold))
                     .foregroundColor(.white)
+                // DEV MODE – trykk 5 ganger for å låse opp Full (fjernes før lansering)
                 Text("Pekkam")
                     .font(.title2.weight(.bold))
                     .foregroundColor(.white)
+                    .onTapGesture {
+                        titleTapCount += 1
+                        if titleTapCount >= 5 {
+                            titleTapCount = 0
+                            purchaseManager.devModeUnlock()
+                            showDevBanner = true
+                        }
+                    }
+                // END DEV MODE
                 Spacer()
                 Button(action: onClose) {
                     Image(systemName: "xmark.circle.fill")
@@ -26,15 +42,39 @@ struct SettingsMenuView: View {
             }
             .padding(.horizontal, 24)
             .padding(.top, 60)
-            .padding(.bottom, 24)
+            .padding(.bottom, purchaseManager.devModeActive ? 8 : 24)
+
+            // DEV MODE banner – fjernes før lansering
+            if purchaseManager.devModeActive || showDevBanner {
+                HStack(spacing: 6) {
+                    Image(systemName: "wrench.fill")
+                    Text("DEV: Full-versjon aktiv")
+                        .font(.caption.weight(.semibold))
+                }
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 6)
+                .background(Color.yellow)
+                .padding(.bottom, 8)
+            }
+            // END DEV MODE
 
             Divider().overlay(Color.white.opacity(0.15))
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
 
-                    // ── Account / tier ───────────────────────────────
+                    // ── Innlogging ────────────────────────────────────
                     sectionHeader("Konto")
+                    authSection
+
+                    Divider()
+                        .overlay(Color.white.opacity(0.12))
+                        .padding(.horizontal, 24)
+                        .padding(.top, 12)
+
+                    // ── Abonnement ────────────────────────────────────
+                    sectionHeader("Abonnement")
 
                     tierCard
 
@@ -232,6 +272,117 @@ struct SettingsMenuView: View {
             .padding(.vertical, 12)
         }
         .buttonStyle(.plain)
+    }
+
+    // MARK: – Auth section
+
+    private var authSection: some View {
+        Group {
+            if let user = authManager.currentUser {
+                // Logged in state
+                HStack(spacing: 14) {
+                    Image(systemName: user.providerIcon)
+                        .font(.title3)
+                        .foregroundColor(.white)
+                        .frame(width: 40, height: 40)
+                        .background(Color.white.opacity(0.12))
+                        .clipShape(Circle())
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(user.displayName)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(.white)
+                        Text(user.email.isEmpty ? user.provider.capitalized : user.email)
+                            .font(.caption2)
+                            .foregroundColor(.white.opacity(0.5))
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 6)
+
+                HStack(spacing: 10) {
+                    // Synk kjøp (restore)
+                    Button(action: { Task { await purchaseManager.restorePurchases() } }) {
+                        Label("Synk kjøp", systemImage: "arrow.triangle.2.circlepath")
+                            .font(.caption.weight(.semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(Color.white.opacity(0.12))
+                            .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+
+                    Button(action: { authManager.signOut() }) {
+                        Text("Logg ut")
+                            .font(.caption.weight(.semibold))
+                            .foregroundColor(.red.opacity(0.85))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(Color.red.opacity(0.1))
+                            .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 4)
+
+            } else {
+                // Not logged in
+                if let err = authManager.error {
+                    Text(err)
+                        .font(.caption2)
+                        .foregroundColor(.orange)
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 6)
+                }
+
+                VStack(spacing: 10) {
+                    // Sign in with Apple
+                    Button(action: { authManager.signInWithApple() }) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "apple.logo")
+                                .font(.system(size: 15, weight: .semibold))
+                            Text("Logg inn med Apple")
+                                .font(.subheadline.weight(.semibold))
+                        }
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(authManager.isLoading)
+
+                    // Sign in with Google
+                    Button(action: { authManager.signInWithGoogle() }) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "g.circle.fill")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(.white)
+                            Text("Logg inn med Google")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color(red: 0.26, green: 0.52, blue: 0.96))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(authManager.isLoading)
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 4)
+
+                Text("Logg inn for å synkronisere kjøpene dine på tvers av enheter.")
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.35))
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 6)
+            }
+        }
     }
 
     // MARK: – Appearance picker

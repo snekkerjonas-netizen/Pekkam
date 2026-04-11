@@ -53,11 +53,13 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private lateinit var purchaseManager: PurchaseManager
+    private lateinit var authManager: AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         purchaseManager = PurchaseManager(this)
+        authManager = AuthManager(this)
 
         setContent {
             PekkamTheme {
@@ -70,6 +72,12 @@ class MainActivity : ComponentActivity() {
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
                     val tier by purchaseManager.currentTier.collectAsState(AppTier.Free)
+                    val authUser by authManager.currentUser.collectAsState(null)
+                    val authLoading by authManager.isLoading.collectAsState(false)
+                    val authError by authManager.error.collectAsState(null)
+                    val devMode by authManager.devModeActive.collectAsState(false)
+                    // DEV MODE: tap count state
+                    var titleTapCount by remember { mutableStateOf(0) }
 
                     ModalNavigationDrawer(
                         drawerState = drawerState,
@@ -83,25 +91,102 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier.padding(start = 24.dp, top = 52.dp, bottom = 20.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(
-                                        Icons.Default.Star,
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                        modifier = Modifier.size(28.dp)
-                                    )
+                                    Icon(Icons.Default.Star, contentDescription = null, tint = Color.White, modifier = Modifier.size(28.dp))
                                     Spacer(Modifier.width(10.dp))
+                                    // DEV MODE – trykk 5 ganger på tittelen (fjernes før lansering)
                                     Text(
                                         "Pekkam",
                                         color = Color.White,
                                         fontSize = 20.sp,
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.clickable {
+                                            titleTapCount++
+                                            if (titleTapCount >= 5) {
+                                                titleTapCount = 0
+                                                authManager.devModeUnlock()
+                                                purchaseManager.devModeUnlock()
+                                            }
+                                        }
                                     )
+                                    // END DEV MODE
                                 }
+
+                                // DEV banner – fjernes før lansering
+                                if (devMode) {
+                                    Box(modifier = Modifier.fillMaxWidth().background(Color.Yellow).padding(6.dp)) {
+                                        Text("DEV: Full-versjon aktiv", color = Color.Black, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.Center))
+                                    }
+                                }
+                                // END DEV
 
                                 Divider(color = Color.White.copy(alpha = 0.12f))
 
-                                // ── Account / tier ─────────────────────────────────
+                                // ── Innlogging ──────────────────────────────────────
                                 DrawerSectionLabel("Konto")
+
+                                if (authUser != null) {
+                                    // Logget inn
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(Icons.Default.Star, contentDescription = null, tint = Color.White, modifier = Modifier.size(22.dp))
+                                        Spacer(Modifier.width(12.dp))
+                                        Column {
+                                            Text(authUser!!.displayName, color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                                            Text(authUser!!.email, color = Color.Gray, fontSize = 11.sp)
+                                        }
+                                    }
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(20.dp))
+                                                .background(Color.White.copy(alpha = 0.12f))
+                                                .clickable { purchaseManager.restorePurchases() }
+                                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                                        ) { Text("Synk kjøp", color = Color.White, fontSize = 12.sp) }
+                                        Box(
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(20.dp))
+                                                .background(Color.Red.copy(alpha = 0.12f))
+                                                .clickable { scope.launch { authManager.signOut() } }
+                                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                                        ) { Text("Logg ut", color = Color.Red.copy(alpha = 0.85f), fontSize = 12.sp) }
+                                    }
+                                } else {
+                                    // Ikke logget inn
+                                    authError?.let { err ->
+                                        Text(err, color = Color(0xFFFF9800), fontSize = 10.sp, modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp))
+                                    }
+                                    // Google Sign-In
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(horizontal = 24.dp, vertical = 6.dp)
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .background(Color(0xFF4285F4))
+                                            .clickable {
+                                                scope.launch { authManager.signInWithGoogle(this@MainActivity) }
+                                            }
+                                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    ) {
+                                        Text("Logg inn med Google", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                                    }
+                                    Text(
+                                        "Logg inn for å synkronisere kjøp på tvers av enheter.",
+                                        color = Color.Gray,
+                                        fontSize = 10.sp,
+                                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 2.dp)
+                                    )
+                                }
+
+                                Divider(color = Color.White.copy(alpha = 0.12f), modifier = Modifier.padding(top = 12.dp))
+
+                                // ── Abonnement ──────────────────────────────────────
+                                DrawerSectionLabel("Abonnement")
 
                                 val tierName = when (tier) {
                                     AppTier.Free    -> "Gratisversjon"
@@ -119,12 +204,7 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(
-                                        Icons.Default.Star,
-                                        contentDescription = null,
-                                        tint = if (tier == AppTier.Full) Color.Yellow else Color.Gray,
-                                        modifier = Modifier.size(20.dp)
-                                    )
+                                    Icon(Icons.Default.Star, contentDescription = null, tint = if (tier == AppTier.Full) Color.Yellow else Color.Gray, modifier = Modifier.size(20.dp))
                                     Spacer(Modifier.width(12.dp))
                                     Column {
                                         Text(tierName, color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
@@ -133,25 +213,16 @@ class MainActivity : ComponentActivity() {
                                 }
 
                                 if (tier != AppTier.Full) {
-                                    // Upgrade CTA
                                     Box(
                                         modifier = Modifier
                                             .padding(horizontal = 24.dp, vertical = 8.dp)
                                             .fillMaxWidth()
                                             .clip(RoundedCornerShape(12.dp))
                                             .background(Color.White)
-                                            .clickable {
-                                                scope.launch { drawerState.close() }
-                                                showPaywall.value = true
-                                            }
+                                            .clickable { scope.launch { drawerState.close() }; showPaywall.value = true }
                                             .padding(horizontal = 16.dp, vertical = 12.dp)
                                     ) {
-                                        Text(
-                                            if (tier == AppTier.Compass) "Oppgrader til Full" else "Kjøp Premium",
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 14.sp
-                                        )
+                                        Text(if (tier == AppTier.Compass) "Oppgrader til Full" else "Kjøp Premium", color = Color.Black, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
                                     }
                                 }
 

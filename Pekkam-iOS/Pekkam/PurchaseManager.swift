@@ -7,6 +7,15 @@ class PurchaseManager: NSObject, ObservableObject {
     @Published var products: [Product] = []
     @Published var isLoading = false
     @Published var error: String?
+    @Published var purchaseSuccess: String?
+
+    // DEV MODE – fjernes før lansering
+    @Published var devModeActive: Bool = false
+    func devModeUnlock() {
+        devModeActive = true
+        currentTier = .full
+    }
+    // END DEV MODE
     
     private let productIDs = ["com.pekkam.compass", "com.pekkam.full", "com.pekkam.upgrade_to_full"]
     private let tierKey = "pekkam_app_tier"
@@ -57,10 +66,21 @@ class PurchaseManager: NSObject, ObservableObject {
     }
     
     func purchase(_ productID: String) async throws {
-        guard let product = products.first(where: { $0.id == productID }) else {
-            throw NSError(domain: "PurchaseManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Product not found"])
+        error = nil
+        purchaseSuccess = nil
+
+        guard !products.isEmpty else {
+            error = "Produkter ikke lastet ennå – prøv igjen om et øyeblikk."
+            throw NSError(domain: "PurchaseManager", code: -2, userInfo: [NSLocalizedDescriptionKey: error!])
         }
-        
+        guard let product = products.first(where: { $0.id == productID }) else {
+            error = "Produktet ble ikke funnet (ID: \(productID))."
+            throw NSError(domain: "PurchaseManager", code: -1, userInfo: [NSLocalizedDescriptionKey: error!])
+        }
+
+        isLoading = true
+        defer { isLoading = false }
+
         let result = try await product.purchase()
         switch result {
         case .success(let verification):
@@ -68,17 +88,18 @@ class PurchaseManager: NSObject, ObservableObject {
             case .verified(let transaction):
                 await handleVerifiedTransaction(transaction)
                 await transaction.finish()
-            case .unverified(_, _):
-                error = "Transaction failed verification"
+                purchaseSuccess = "Kjøpet ble fullført 🎉"
+            case .unverified:
+                error = "Transaksjonen kunne ikke verifiseres."
             @unknown default:
                 break
             }
         case .pending:
-            error = "Purchase is pending"
+            error = "Kjøpet er til behandling – sjekk igjen snart."
         case .userCancelled:
-            error = "Purchase was cancelled"
+            break  // stille avbrytelse, ingen feilmelding
         @unknown default:
-            error = "Unknown purchase result"
+            error = "Ukjent kjøpsresultat."
         }
     }
     

@@ -4,6 +4,7 @@ import SwiftUI
 struct PekkamApp: App {
     @StateObject var purchaseManager = PurchaseManager()
     @StateObject var appSettings = AppSettings()
+    @StateObject var authManager = AuthManager()
     @AppStorage("appAppearance") var appAppearance: String = "system"
 
     var body: some Scene {
@@ -11,6 +12,7 @@ struct PekkamApp: App {
             ContentView()
                 .environmentObject(purchaseManager)
                 .environmentObject(appSettings)
+                .environmentObject(authManager)
                 .preferredColorScheme(colorScheme(for: appAppearance))
         }
     }

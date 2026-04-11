@@ -106,6 +106,13 @@ class PurchaseManager(context: Context) {
         return AppTier.fromName(tierName)
     }
 
+    // DEV MODE – fjernes før lansering
+    fun devModeUnlock() {
+        _currentTier.value = AppTier.Full
+        saveTierToPrefs(AppTier.Full)
+    }
+    // END DEV MODE
+
     fun destroy() {
         if (billingClient.isReady) {
             billingClient.endConnection()
