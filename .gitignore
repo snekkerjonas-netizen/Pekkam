@@ -1,0 +1,10 @@
+# Android generated
+Pekkam-Android/.gradle/
+Pekkam-Android/.idea/
+Pekkam-Android/local.properties
+Pekkam-Android/*.iml
+
+# Xcode generated
+Pekkam-iOS/*.xcodeproj/xcuserdata/
+Pekkam-iOS/*.xcodeproj/project.xcworkspace/xcuserdata/
+Pekkam-iOS/DerivedData/
