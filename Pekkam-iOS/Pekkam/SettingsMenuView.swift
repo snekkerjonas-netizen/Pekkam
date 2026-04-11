@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsMenuView: View {
     @EnvironmentObject var purchaseManager: PurchaseManager
+    @EnvironmentObject var appSettings: AppSettings
     @AppStorage("appAppearance") private var appAppearance: String = "system"
     var onClose: () -> Void
     var onUpgrade: () -> Void
@@ -41,32 +42,42 @@ struct SettingsMenuView: View {
                         upgradeButton
                     }
 
-                    sectionHeader("Funksjoner")
+                    sectionHeader("Aktive funksjoner")
 
-                    featureRow(icon: "location.fill",
-                               title: "GPS-metadata",
-                               subtitle: "Legger posisjon inn i bildet",
-                               unlocked: purchaseManager.currentTier.hasGPS)
-
-                    featureRow(icon: "location.north.fill",
-                               title: "Kompass-data",
-                               subtitle: "Retning lagres med bildet",
-                               unlocked: purchaseManager.currentTier.hasCompass)
-
-                    featureRow(icon: "map.fill",
-                               title: "Kartvisning",
-                               subtitle: "Se hvor bildet ble tatt",
-                               unlocked: purchaseManager.currentTier.hasMapView)
-
-                    featureRow(icon: "building.2.fill",
-                               title: "Innvendig lokasjon",
-                               subtitle: "Etasje og rom-informasjon",
-                               unlocked: purchaseManager.currentTier.hasIndoorPanel)
-
-                    featureRow(icon: "drop.slash.fill",
-                               title: "Uten vannmerke",
-                               subtitle: "Rene bilder uten logo",
-                               unlocked: !purchaseManager.currentTier.hasWatermark)
+                    featureToggle(
+                        icon: "location.fill",
+                        title: "GPS-metadata",
+                        subtitle: "Legger posisjon inn i bildet",
+                        unlocked: purchaseManager.currentTier.hasGPS,
+                        isOn: $appSettings.gpsActive
+                    )
+                    featureToggle(
+                        icon: "location.north.fill",
+                        title: "Kompass-data",
+                        subtitle: "Retning lagres med bildet",
+                        unlocked: purchaseManager.currentTier.hasCompass,
+                        isOn: $appSettings.compassActive
+                    )
+                    featureToggle(
+                        icon: "map.fill",
+                        title: "Kartvisning",
+                        subtitle: "Vis kart over hvor bildet ble tatt",
+                        unlocked: purchaseManager.currentTier.hasMapView,
+                        isOn: $appSettings.mapActive
+                    )
+                    featureToggle(
+                        icon: "building.2.fill",
+                        title: "Innvendig lokasjon",
+                        subtitle: "Etasje og rom-informasjon",
+                        unlocked: purchaseManager.currentTier.hasIndoorPanel,
+                        isOn: $appSettings.indoorActive
+                    )
+                    featureRow(
+                        icon: "drop.slash.fill",
+                        title: "Uten vannmerke",
+                        subtitle: "Rene bilder uten logo",
+                        unlocked: !purchaseManager.currentTier.hasWatermark
+                    )
 
                     sectionHeader("Utseende")
 
@@ -145,6 +156,37 @@ struct SettingsMenuView: View {
             .padding(.top, 10)
         }
         .buttonStyle(.plain)
+    }
+
+    private func featureToggle(icon: String, title: String, subtitle: String, unlocked: Bool, isOn: Binding<Bool>) -> some View {
+        HStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.system(size: 16))
+                .foregroundColor(unlocked ? .blue : .white.opacity(0.3))
+                .frame(width: 28)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.subheadline)
+                    .foregroundColor(unlocked ? .white : .white.opacity(0.45))
+                Text(subtitle)
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.35))
+            }
+            Spacer()
+            if unlocked {
+                Toggle("", isOn: isOn)
+                    .labelsHidden()
+                    .tint(.blue)
+            } else {
+                Image(systemName: "lock.fill")
+                    .font(.caption)
+                    .foregroundColor(.white.opacity(0.2))
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.vertical, 8)
+        .disabled(!unlocked)
     }
 
     private func featureRow(icon: String, title: String, subtitle: String, unlocked: Bool) -> some View {

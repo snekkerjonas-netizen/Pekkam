@@ -31,6 +31,7 @@
 		D751BF209EF52E1E12B495E1 /* IndoorAnnotationPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D51FC14D28256ADB9F7C49F /* IndoorAnnotationPanel.swift */; };
 		DC42BB8EC4A91CE6FCE7887B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8F9A865C109F756B6BD5031 /* StoreKit.framework */; };
 		E25425C45E5F5750481FAD89 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1105A00080C65DF03EC6E8E8 /* MapKit.framework */; };
+		F4346524A56AEAECB5C6C091 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6608D0EA6CAE4F754BF9C0 /* AppSettings.swift */; };
 		F964EC7A60FDE68C7862A3CD /* DirectionMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55570407AF1CB4C849A75852 /* DirectionMapView.swift */; };
 		FBDF6A35BA49A83998F15AEC /* CompassManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD1EF423AF21C97DB77FB4E /* CompassManager.swift */; };
 /* End PBXBuildFile section */
@@ -61,6 +62,7 @@
 		C28A879FF2C918FDAFA869AA /* GlassModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassModifier.swift; sourceTree = "<group>"; };
 		CD8A607DA2EA881AB9413487 /* PekkamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PekkamApp.swift; sourceTree = "<group>"; };
 		D8F9A865C109F756B6BD5031 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = StoreKit.framework; sourceTree = "<group>"; };
+		EA6608D0EA6CAE4F754BF9C0 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		ED4B79E26A69DCE94EDCF833 /* PhotoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailView.swift; sourceTree = "<group>"; };
 		EE3574F9DB69DBE467A76882 /* SettingsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -108,6 +110,7 @@
 		80C090D604C71FBF4B16277D /* Pekkam */ = {
 			isa = PBXGroup;
 			children = (
+				EA6608D0EA6CAE4F754BF9C0 /* AppSettings.swift */,
 				3CB0FB897AB8D610C19F6A4D /* AppTier.swift */,
 				72CE17E9606D5BD6ACF07294 /* CameraManager.swift */,
 				726DCFCC5CDB1CA985347F34 /* CameraPreviewView.swift */,
@@ -216,6 +219,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4346524A56AEAECB5C6C091 /* AppSettings.swift in Sources */,
 				CE4FB068FF9C1EDDA9E4DB48 /* AppTier.swift in Sources */,
 				4E7FCC9F7EE14E909E5990BB /* CameraManager.swift in Sources */,
 				13B0AAF42826D1B3A62A92DF /* CameraPreviewView.swift in Sources */,

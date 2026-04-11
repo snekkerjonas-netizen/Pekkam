@@ -24,7 +24,7 @@ struct GalleryView: View {
                 }
                 .padding(12)
             }
-            .navigationTitle("Galleriet")
+            .navigationTitle("Galleri")
             .onAppear(perform: fetchAssets)
         }
     }

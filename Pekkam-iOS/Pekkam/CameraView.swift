@@ -6,6 +6,7 @@ struct CameraView: View {
     @StateObject private var locationManager = LocationManager()
     @StateObject private var compassManager = CompassManager()
     @EnvironmentObject var purchaseManager: PurchaseManager
+    @EnvironmentObject var appSettings: AppSettings
 
     @State private var showPaywall = false
     @State private var showMap = false
@@ -34,7 +35,7 @@ struct CameraView: View {
             }
 
             // Indoor floating button (top-trailing)
-            if purchaseManager.currentTier.hasIndoorPanel {
+            if appSettings.useIndoor(tier: purchaseManager.currentTier) {
                 VStack {
                     HStack {
                         Spacer()
@@ -90,7 +91,7 @@ struct CameraView: View {
             }
 
             // GPS indicator
-            if purchaseManager.currentTier.hasGPS, let _ = locationManager.location {
+            if appSettings.useGPS(tier: purchaseManager.currentTier), let _ = locationManager.location {
                 HStack(spacing: 6) {
                     Circle()
                         .fill(colorForAccuracy(locationManager.accuracyCategory))
@@ -105,7 +106,7 @@ struct CameraView: View {
             }
 
             // Compass indicator
-            if purchaseManager.currentTier.hasCompass, let heading = compassManager.heading {
+            if appSettings.useCompass(tier: purchaseManager.currentTier), let heading = compassManager.heading {
                 HStack(spacing: 6) {
                     Image(systemName: "location.north.fill")
                         .font(.caption2)
@@ -179,7 +180,7 @@ struct CameraView: View {
     private var bottomBar: some View {
         HStack(spacing: 20) {
             // Map button
-            if purchaseManager.currentTier.hasMapView {
+            if appSettings.useMap(tier: purchaseManager.currentTier) {
                 Button(action: { showMap = true }) {
                     Image(systemName: "map.fill")
                         .font(.system(size: 24))
@@ -291,12 +292,12 @@ struct CameraView: View {
             var processedData = photoData
 
             if purchaseManager.currentTier.hasWatermark,
-               let image = UIImage(data: photoData) {
+               let image = UIImage(data: photoData) {  // vannmerke er alltid på for gratis, ikke togglebar
                 let watermarked = ImageOverlayRenderer.addWatermark(to: image)
                 processedData = watermarked.jpegData(compressionQuality: 0.95) ?? photoData
             }
 
-            if purchaseManager.currentTier.hasCompass,
+            if appSettings.useCompass(tier: purchaseManager.currentTier),
                let image = UIImage(data: processedData),
                let heading = compassManager.heading {
                 let direction = compassManager.cardinalDirection(from: heading.trueHeading)
@@ -310,10 +311,10 @@ struct CameraView: View {
 
             PhotoMetadata.saveToAlbum(
                 processedData,
-                location: purchaseManager.currentTier.hasGPS ? locationManager.location : nil,
-                heading: purchaseManager.currentTier.hasCompass ? compassManager.heading : nil,
-                floor: purchaseManager.currentTier.hasIndoorPanel ? floor : nil,
-                room: purchaseManager.currentTier.hasIndoorPanel ? room : nil
+                location: appSettings.useGPS(tier: purchaseManager.currentTier) ? locationManager.location : nil,
+                heading: appSettings.useCompass(tier: purchaseManager.currentTier) ? compassManager.heading : nil,
+                floor: appSettings.useIndoor(tier: purchaseManager.currentTier) ? floor : nil,
+                room: appSettings.useIndoor(tier: purchaseManager.currentTier) ? room : nil
             )
         }
     }

@@ -47,44 +47,31 @@ struct PaywallView: View {
                         TierCard(
                             title: "Kompass",
                             price: "39 kr",
-                            features: ["Kamera", "Kompass overlay", "Uten vannmerke"],
+                            features: ["Kamera", "Kompass-overlay", "Uten vannmerke"],
                             isSelected: purchaseManager.currentTier == .compass,
-                            isActive: purchaseManager.currentTier.rawValue <= "compass"
+                            isActive: purchaseManager.currentTier == .free
                         ) {
                             Task {
                                 try? await purchaseManager.purchase("com.pekkam.compass")
                             }
                         }
-                        
+
                         TierCard(
                             title: "Full",
-                            price: "49 kr",
-                            features: ["Alle Kompass funksjoner", "GPS i EXIF", "Kart visning", "Galleriet detaljer", "Innvendig panel"],
+                            price: purchaseManager.currentTier == .compass ? "10 kr (oppgradering)" : "49 kr",
+                            features: ["Alle Kompass-funksjoner", "GPS i EXIF", "Kartvisning", "Galleri-detaljer", "Innvendig panel"],
                             isSelected: purchaseManager.currentTier == .full,
-                            isActive: purchaseManager.currentTier == .free
+                            isActive: purchaseManager.currentTier != .full
                         ) {
                             Task {
-                                try? await purchaseManager.purchase("com.pekkam.full")
+                                if purchaseManager.currentTier == .compass {
+                                    try? await purchaseManager.purchase("com.pekkam.upgrade_to_full")
+                                } else {
+                                    try? await purchaseManager.purchase("com.pekkam.full")
+                                }
                             }
                         }
                     }
-                }
-                
-                // Upgrade button for compass users
-                if purchaseManager.currentTier == .compass {
-                    Button(action: {
-                        Task {
-                            try? await purchaseManager.purchase("com.pekkam.upgrade_to_full")
-                        }
-                    }) {
-                        Text("Oppgrader til Full (10 kr)")
-                            .frame(maxWidth: .infinity)
-                            .padding(12)
-                            .background(Color(red: 0, green: 0.71, blue: 0.85))
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                    }
-                    .padding(16)
                 }
                 
                 Spacer()
