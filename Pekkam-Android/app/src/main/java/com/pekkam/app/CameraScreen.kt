@@ -54,8 +54,10 @@ import androidx.camera.core.ImageCapture
 fun CameraScreen(
     viewModel: CameraViewModel,
     purchaseManager: PurchaseManager,
+    appSettings: AppSettings,
     onShowPaywall: () -> Unit,
-    onOpenMenu: () -> Unit
+    onOpenMenu: () -> Unit,
+    onOpenMap: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -69,11 +71,15 @@ fun CameraScreen(
 
     var showIndoorPanel by remember { mutableStateOf(false) }
     var floor by remember { mutableStateOf(0) }
-    var room by remember { mutableStateOf("") }
+    var room  by remember { mutableStateOf("") }
 
-    val tier by purchaseManager.currentTier.collectAsState(AppTier.Free)
-    val zoomRatio by viewModel.zoomRatio.collectAsState()
-    val flashMode by viewModel.flashMode.collectAsState()
+    val tier        by purchaseManager.currentTier.collectAsState(AppTier.Free)
+    val zoomRatio   by viewModel.zoomRatio.collectAsState()
+    val flashMode   by viewModel.flashMode.collectAsState()
+    val locationData by viewModel.currentLocationData.collectAsState()
+    val compassReading by viewModel.currentCompassReading.collectAsState()
+    val gpsActive   by appSettings.gpsActive.collectAsState()
+    val compassActive by appSettings.compassActive.collectAsState()
 
     // Keep a reference to the PreviewView so CameraViewModel can hook up after flip
     var previewViewRef by remember { mutableStateOf<PreviewView?>(null) }
@@ -111,19 +117,23 @@ fun CameraScreen(
                 Icon(Icons.Default.Menu, contentDescription = "Meny", tint = Color.White)
             }
 
-            // GPS chip
-            if (tier.hasGPS) {
+            // GPS chip – kun vis hvis tier + toggle aktiv
+            if (tier.hasGPS && gpsActive) {
+                val accuracyText = locationData?.let { "±${it.accuracy.toInt()}m" } ?: "GPS…"
                 GlassChip {
-                    Text("±100m", color = Color.White, fontSize = 11.sp)
+                    Text(accuracyText, color = Color.White, fontSize = 11.sp)
                 }
             }
 
-            // Compass chip
-            if (tier.hasCompass) {
+            // Compass chip – kun vis hvis tier + toggle aktiv
+            if (tier.hasCompass && compassActive) {
+                val heading   = compassReading?.heading
+                val degText   = if (heading != null) String.format("%.0f°", heading) else "…"
+                val dirText   = if (heading != null) CompassRepository.getCardinalDirection(heading) else ""
                 GlassChip {
                     Column {
-                        Text("45°", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                        Text("Nord", color = Color.White, fontSize = 9.sp)
+                        Text(degText,  color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        Text(dirText,  color = Color.White, fontSize = 9.sp)
                     }
                 }
             }
@@ -170,7 +180,7 @@ fun CameraScreen(
             ) {
                 // Map button
                 GlassIconButton(
-                    onClick = if (tier.hasMapView) ({ /* TODO: show map */ }) else onShowPaywall
+                    onClick = if (tier.hasMapView) onOpenMap else onShowPaywall
                 ) {
                     Icon(
                         Icons.Default.Map,
@@ -185,7 +195,7 @@ fun CameraScreen(
                         .size(74.dp)
                         .clip(CircleShape)
                         .background(Color.White.copy(alpha = 0.15f))
-                        .clickable { viewModel.capturePhoto(context, null, null, floor, room) },
+                        .clickable { viewModel.capturePhoto(floor = floor, room = room) },
                     contentAlignment = Alignment.Center
                 ) {
                     Box(

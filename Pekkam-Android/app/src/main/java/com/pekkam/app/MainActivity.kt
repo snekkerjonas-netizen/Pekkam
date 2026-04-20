@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,13 +17,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -30,7 +34,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -54,21 +60,26 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     private lateinit var purchaseManager: PurchaseManager
     private lateinit var authManager: AuthManager
+    private lateinit var appSettings: AppSettings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         purchaseManager = PurchaseManager(this)
         authManager = AuthManager(this)
+        appSettings = AppSettings(this)
 
         setContent {
-            PekkamTheme {
+            val appAppearance by appSettings.appAppearance.collectAsState()
+
+            PekkamTheme(appearance = appAppearance) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Black
                 ) {
                     val navController = rememberNavController()
                     val showPaywall = remember { mutableStateOf(false) }
+                    val showAbout   = remember { mutableStateOf(false) }
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
                     val tier by purchaseManager.currentTier.collectAsState(AppTier.Free)
@@ -79,11 +90,17 @@ class MainActivity : ComponentActivity() {
                     // DEV MODE: tap count state
                     var titleTapCount by remember { mutableStateOf(0) }
 
+                    // Settings toggles
+                    val gpsActive     by appSettings.gpsActive.collectAsState()
+                    val compassActive by appSettings.compassActive.collectAsState()
+                    val mapActive     by appSettings.mapActive.collectAsState()
+                    val indoorActive  by appSettings.indoorActive.collectAsState()
+
                     ModalNavigationDrawer(
                         drawerState = drawerState,
                         drawerContent = {
                             ModalDrawerSheet(
-                                modifier = Modifier.width(300.dp),
+                                modifier = Modifier.width(300.dp).fillMaxHeight().verticalScroll(rememberScrollState()),
                                 drawerContainerColor = Color(0xFF1A1A1A)
                             ) {
                                 // ── Drawer header ──────────────────────────────────
@@ -231,7 +248,7 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier.padding(top = 12.dp)
                                 )
 
-                                // ── Features ───────────────────────────────────────
+                                // ── Funksjoner ───────────────────────────────────────
                                 DrawerSectionLabel("Funksjoner")
 
                                 DrawerFeatureRow("GPS-metadata",      "Posisjon lagres i bildet",   tier.hasGPS)
@@ -245,30 +262,89 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier.padding(top = 12.dp)
                                 )
 
+                                // ── Innstillinger ────────────────────────────────────
+                                DrawerSectionLabel("Innstillinger")
+
+                                DrawerToggleRow(
+                                    title    = "GPS",
+                                    subtitle = "Legg posisjon inn i bildet",
+                                    enabled  = tier.hasGPS,
+                                    checked  = gpsActive,
+                                    onChecked = { appSettings.setGpsActive(it) }
+                                )
+                                DrawerToggleRow(
+                                    title    = "Kompass",
+                                    subtitle = "Legg retning inn i bildet",
+                                    enabled  = tier.hasCompass,
+                                    checked  = compassActive,
+                                    onChecked = { appSettings.setCompassActive(it) }
+                                )
+                                DrawerToggleRow(
+                                    title    = "Kartvisning",
+                                    subtitle = "Vis kart etter bilde",
+                                    enabled  = tier.hasMapView,
+                                    checked  = mapActive,
+                                    onChecked = { appSettings.setMapActive(it) }
+                                )
+                                DrawerToggleRow(
+                                    title    = "Innvendig lokasjon",
+                                    subtitle = "Etasje og rom-informasjon",
+                                    enabled  = tier.hasIndoorPanel,
+                                    checked  = indoorActive,
+                                    onChecked = { appSettings.setIndoorActive(it) }
+                                )
+
+                                Divider(
+                                    color = Color.White.copy(alpha = 0.12f),
+                                    modifier = Modifier.padding(top = 12.dp)
+                                )
+
+                                // ── Utseende ─────────────────────────────────────────
+                                DrawerSectionLabel("Utseende")
+                                DrawerAppearancePicker(
+                                    current  = appAppearance,
+                                    onSelect = { appSettings.setAppAppearance(it) }
+                                )
+
+                                Divider(
+                                    color = Color.White.copy(alpha = 0.12f),
+                                    modifier = Modifier.padding(top = 12.dp)
+                                )
+
                                 // ── App ────────────────────────────────────────────
                                 DrawerSectionLabel("App")
 
                                 DrawerMenuRow(Icons.Default.Refresh, "Gjenopprett kjøp") {
                                     purchaseManager.restorePurchases()
                                 }
-                                DrawerMenuRow(Icons.Default.Info, "Om Pekkam") { }
+                                DrawerMenuRow(Icons.Default.Info, "Om Pekkam") {
+                                    showAbout.value = true
+                                }
+
+                                Spacer(Modifier.height(24.dp))
                             }
                         }
                     ) {
                         // ── Main content ───────────────────────────────────────
+                        val cameraViewModel = remember {
+                            CameraViewModel(
+                                this@MainActivity,
+                                purchaseManager,
+                                LocationRepository(this@MainActivity),
+                                CompassRepository(this@MainActivity),
+                                appSettings
+                            )
+                        }
+
                         NavHost(navController = navController, startDestination = "camera") {
                             composable("camera") {
-                                val viewModel = CameraViewModel(
-                                    this@MainActivity,
-                                    purchaseManager,
-                                    LocationRepository(this@MainActivity),
-                                    CompassRepository(this@MainActivity)
-                                )
                                 CameraScreen(
-                                    viewModel = viewModel,
+                                    viewModel = cameraViewModel,
                                     purchaseManager = purchaseManager,
+                                    appSettings = appSettings,
                                     onShowPaywall = { showPaywall.value = true },
-                                    onOpenMenu = { scope.launch { drawerState.open() } }
+                                    onOpenMenu = { scope.launch { drawerState.open() } },
+                                    onOpenMap = { navController.navigate("map") }
                                 )
                             }
 
@@ -277,10 +353,12 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("map") {
+                                val locData by cameraViewModel.currentLocationData.collectAsState()
+                                val compass by cameraViewModel.currentCompassReading.collectAsState()
                                 DirectionMapScreen(
-                                    latitude = 59.9139,
-                                    longitude = 10.7522,
-                                    heading = 45f
+                                    latitude  = locData?.location?.latitude  ?: 59.9139,
+                                    longitude = locData?.location?.longitude ?: 10.7522,
+                                    heading   = compass?.heading ?: 0f
                                 )
                             }
                         }
@@ -291,6 +369,27 @@ class MainActivity : ComponentActivity() {
                                 onDismiss = { showPaywall.value = false },
                                 onPurchase = { productId ->
                                     purchaseManager.purchase(this@MainActivity, productId)
+                                }
+                            )
+                        }
+
+                        // ── Om Pekkam-dialog ───────────────────────────────────
+                        if (showAbout.value) {
+                            AlertDialog(
+                                onDismissRequest = { showAbout.value = false },
+                                title = { Text("Om Pekkam") },
+                                text = {
+                                    Text(
+                                        "Pekkam er en profesjonell dokumentasjonskamera-app for " +
+                                        "håndverkere og inspektører.\n\n" +
+                                        "Versjon 1.0\n" +
+                                        "© Pekkam – Alle rettigheter forbeholdt"
+                                    )
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = { showAbout.value = false }) {
+                                        Text("Lukk")
+                                    }
                                 }
                             )
                         }
@@ -335,6 +434,80 @@ private fun DrawerFeatureRow(title: String, subtitle: String, unlocked: Boolean)
         Column {
             Text(title, color = if (unlocked) Color.White else Color.White.copy(alpha = 0.45f), fontSize = 13.sp)
             Text(subtitle, color = Color.Gray, fontSize = 10.sp)
+        }
+    }
+}
+
+@androidx.compose.runtime.Composable
+private fun DrawerToggleRow(
+    title: String,
+    subtitle: String,
+    enabled: Boolean,
+    checked: Boolean,
+    onChecked: (Boolean) -> Unit
+) {
+    Row(
+        modifier = androidx.compose.ui.Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = androidx.compose.ui.Modifier.weight(1f)) {
+            Text(
+                title,
+                color = if (enabled) Color.White else Color.White.copy(alpha = 0.4f),
+                fontSize = 13.sp
+            )
+            Text(subtitle, color = Color.Gray, fontSize = 10.sp)
+        }
+        if (enabled) {
+            Switch(
+                checked = checked,
+                onCheckedChange = onChecked
+            )
+        } else {
+            Icon(
+                Icons.Default.Lock,
+                contentDescription = null,
+                tint = Color.White.copy(alpha = 0.2f),
+                modifier = androidx.compose.ui.Modifier.size(16.dp)
+            )
+        }
+    }
+}
+
+@androidx.compose.runtime.Composable
+private fun DrawerAppearancePicker(current: String, onSelect: (String) -> Unit) {
+    val options = listOf(
+        Triple("system", "System",  "●"),
+        Triple("light",  "Lyst",    "☀"),
+        Triple("dark",   "Mørkt",   "☾"),
+    )
+    Row(
+        modifier = androidx.compose.ui.Modifier
+            .padding(horizontal = 24.dp, vertical = 4.dp)
+            .fillMaxWidth()
+            .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+            .background(Color.White.copy(alpha = 0.08f)),
+    ) {
+        options.forEach { (id, label, _) ->
+            val selected = current == id
+            Box(
+                modifier = androidx.compose.ui.Modifier
+                    .weight(1f)
+                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(10.dp))
+                    .background(if (selected) Color.White else Color.Transparent)
+                    .clickable { onSelect(id) }
+                    .padding(vertical = 10.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    label,
+                    color = if (selected) Color.Black else Color.White.copy(alpha = 0.7f),
+                    fontSize = 12.sp,
+                    fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+                )
+            }
         }
     }
 }

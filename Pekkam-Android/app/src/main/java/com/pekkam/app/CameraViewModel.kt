@@ -2,7 +2,9 @@ package com.pekkam.app
 
 import android.content.ContentValues
 import android.content.Context
-import android.location.Location
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.provider.MediaStore
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
@@ -11,8 +13,12 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -20,11 +26,9 @@ class CameraViewModel(
     private val context: Context,
     private val purchaseManager: PurchaseManager,
     private val locationRepository: LocationRepository,
-    private val compassRepository: CompassRepository
+    private val compassRepository: CompassRepository,
+    private val appSettings: AppSettings
 ) : ViewModel() {
-
-    private val _tier = MutableStateFlow<AppTier>(AppTier.Free)
-    val tier: StateFlow<AppTier> = _tier
 
     private val _lastImageUri = MutableStateFlow<String?>(null)
     val lastImageUri: StateFlow<String?> = _lastImageUri
@@ -37,10 +41,28 @@ class CameraViewModel(
     private val _flashMode = MutableStateFlow(ImageCapture.FLASH_MODE_OFF)
     val flashMode: StateFlow<Int> = _flashMode
 
+    // Live sensor state
+    private val _currentLocationData = MutableStateFlow<LocationRepository.LocationData?>(null)
+    val currentLocationData: StateFlow<LocationRepository.LocationData?> = _currentLocationData
+
+    private val _currentCompassReading = MutableStateFlow<CompassReading?>(null)
+    val currentCompassReading: StateFlow<CompassReading?> = _currentCompassReading
+
     private var imageCapture: ImageCapture? = null
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
+
+    init {
+        viewModelScope.launch {
+            try {
+                locationRepository.getLocationUpdates().collect { _currentLocationData.value = it }
+            } catch (_: Exception) { /* location permission not yet granted */ }
+        }
+        viewModelScope.launch {
+            compassRepository.getCompassUpdates().collect { _currentCompassReading.value = it }
+        }
+    }
 
     fun setupCamera(provider: ProcessCameraProvider, previewSurface: androidx.camera.view.PreviewView) {
         try {
@@ -103,14 +125,13 @@ class CameraViewModel(
         imageCapture?.flashMode = next
     }
 
-    fun capturePhoto(
-        context: Context,
-        location: Location?,
-        heading: Float?,
-        floor: Int? = null,
-        room: String? = null
-    ) {
+    fun capturePhoto(floor: Int? = null, room: String? = null) {
         val imageCapture = imageCapture ?: return
+
+        // Snapshot sensor state at shutter time
+        val location   = _currentLocationData.value?.location
+        val heading    = _currentCompassReading.value?.heading
+        val tier       = purchaseManager.currentTier.value
 
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis())
         val contentValues = ContentValues().apply {
@@ -130,35 +151,16 @@ class CameraViewModel(
             context.mainExecutor,
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val uri = outputFileResults.savedUri
-                    if (uri != null) {
+                    val uri = outputFileResults.savedUri ?: return
+                    viewModelScope.launch(Dispatchers.IO) {
                         try {
-                            val pfd = context.contentResolver.openFileDescriptor(uri, "w")
-                            if (pfd != null) {
-                                val exif = ExifInterface(pfd.fileDescriptor)
-
-                                if (_tier.value.hasGPS && location != null) {
-                                    exif.setLatLong(location.latitude, location.longitude)
-                                    exif.setAttribute(ExifInterface.TAG_GPS_DOP, location.accuracy.toString())
-                                }
-
-                                if (_tier.value.hasCompass && heading != null) {
-                                    exif.setAttribute("PekkamHeading", heading.toString())
-                                    if (floor != null) {
-                                        exif.setAttribute("PekkamFloor", floor.toString())
-                                    }
-                                    if (room != null) {
-                                        exif.setAttribute("PekkamRoom", room)
-                                    }
-                                }
-
-                                exif.saveAttributes()
-                                pfd.close()
-                            }
+                            processAndSave(uri, tier, location, heading, floor, room)
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
-                        _lastImageUri.value = uri.toString()
+                        withContext(Dispatchers.Main) {
+                            _lastImageUri.value = uri.toString()
+                        }
                     }
                 }
 
@@ -169,15 +171,59 @@ class CameraViewModel(
         )
     }
 
+    // ── Post-processing: overlays + EXIF ────────────────────────────────────
+
+    private fun processAndSave(
+        uri: Uri,
+        tier: AppTier,
+        location: android.location.Location?,
+        heading: Float?,
+        floor: Int?,
+        room: String?
+    ) {
+        // 1. Decode the raw JPEG from MediaStore
+        val inputStream = context.contentResolver.openInputStream(uri)
+        var bitmap: Bitmap? = BitmapFactory.decodeStream(inputStream)
+        inputStream?.close()
+        if (bitmap == null) return
+
+        // 2. Apply visual overlays
+        if (tier.hasWatermark) {
+            bitmap = ImageOverlayRenderer.addWatermark(bitmap)
+        }
+        val useCompass = appSettings.useCompass(tier)
+        if (useCompass && heading != null) {
+            val direction = CompassRepository.getCardinalDirection(heading)
+            bitmap = ImageOverlayRenderer.addCompassOverlay(bitmap, heading, direction)
+        }
+
+        // 3. Write processed bitmap back to the same URI
+        context.contentResolver.openOutputStream(uri, "wt")?.use { out ->
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+        }
+
+        // 4. Write EXIF metadata (after bitmap re-write so it is not lost)
+        context.contentResolver.openFileDescriptor(uri, "rw")?.use { pfd ->
+            val exif = ExifInterface(pfd.fileDescriptor)
+            if (appSettings.useGPS(tier) && location != null) {
+                exif.setLatLong(location.latitude, location.longitude)
+                exif.setAttribute(ExifInterface.TAG_GPS_DOP, location.accuracy.toString())
+            }
+            if (useCompass && heading != null) {
+                exif.setAttribute("PekkamHeading", heading.toString())
+            }
+            if (floor != null) exif.setAttribute("PekkamFloor", floor.toString())
+            if (room  != null) exif.setAttribute("PekkamRoom",  room)
+            exif.saveAttributes()
+        }
+    }
+
     fun flipCamera() {
         cameraSelector = if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
             CameraSelector.DEFAULT_FRONT_CAMERA
         } else {
             CameraSelector.DEFAULT_BACK_CAMERA
         }
-        // Re-bind with new selector
-        cameraProvider?.let { provider ->
-            // Surface provider reference not available here, caller must call setupCamera again
-        }
+        // Re-bind with new selector – caller must invoke setupCamera again with the PreviewView
     }
 }
