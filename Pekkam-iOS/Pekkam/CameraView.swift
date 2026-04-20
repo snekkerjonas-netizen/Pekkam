@@ -33,6 +33,7 @@ struct CameraView: View {
                 // ── Bottom control bar ───────────────────────────────────
                 bottomBar
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             // Indoor floating button (top-trailing)
             if appSettings.useIndoor(tier: purchaseManager.currentTier) {
