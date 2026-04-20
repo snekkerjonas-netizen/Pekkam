@@ -58,8 +58,8 @@ class AppSettings(context: Context) {
     }
 
     // Helpers: kombinerer «abonnementet gir tilgang» + «brukeren har skrudd den på»
-    fun useGPS(tier: AppTier):     Boolean = tier.hasGPS          && _gpsActive.value
-    fun useCompass(tier: AppTier): Boolean = tier.hasCompass       && _compassActive.value
-    fun useMap(tier: AppTier):     Boolean = tier.hasMapView       && _mapActive.value
-    fun useIndoor(tier: AppTier):  Boolean = tier.hasIndoorPanel   && _indoorActive.value
+    fun useGPS(tier: AppTier):     Boolean = tier.hasGPS          && gpsActive.value
+    fun useCompass(tier: AppTier): Boolean = tier.hasCompass       && compassActive.value
+    fun useMap(tier: AppTier):     Boolean = tier.hasMapView       && mapActive.value
+    fun useIndoor(tier: AppTier):  Boolean = tier.hasIndoorPanel   && indoorActive.value
 }

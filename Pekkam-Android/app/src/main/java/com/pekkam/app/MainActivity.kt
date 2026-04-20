@@ -100,7 +100,10 @@ class MainActivity : ComponentActivity() {
                         drawerState = drawerState,
                         drawerContent = {
                             ModalDrawerSheet(
-                                modifier = Modifier.width(300.dp).fillMaxHeight().verticalScroll(rememberScrollState()),
+                                modifier = Modifier
+                                    .width(300.dp)
+                                    .fillMaxHeight()
+                                    .verticalScroll(rememberScrollState()),
                                 drawerContainerColor = Color(0xFF1A1A1A)
                             ) {
                                 // ── Drawer header ──────────────────────────────────
@@ -479,9 +482,9 @@ private fun DrawerToggleRow(
 @androidx.compose.runtime.Composable
 private fun DrawerAppearancePicker(current: String, onSelect: (String) -> Unit) {
     val options = listOf(
-        Triple("system", "System",  "●"),
-        Triple("light",  "Lyst",    "☀"),
-        Triple("dark",   "Mørkt",   "☾"),
+        Pair("system", "System"),
+        Pair("light",  "Lyst"),
+        Pair("dark",   "Mørkt"),
     )
     Row(
         modifier = androidx.compose.ui.Modifier
@@ -490,7 +493,7 @@ private fun DrawerAppearancePicker(current: String, onSelect: (String) -> Unit) 
             .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
             .background(Color.White.copy(alpha = 0.08f)),
     ) {
-        options.forEach { (id, label, _) ->
+        options.forEach { (id, label) ->
             val selected = current == id
             Box(
                 modifier = androidx.compose.ui.Modifier

@@ -57,7 +57,9 @@ class CameraViewModel(
         viewModelScope.launch {
             try {
                 locationRepository.getLocationUpdates().collect { _currentLocationData.value = it }
-            } catch (_: Exception) { /* location permission not yet granted */ }
+            } catch (_: SecurityException) {
+                // Location permission not yet granted – will be requested at runtime by CameraScreen
+            }
         }
         viewModelScope.launch {
             compassRepository.getCompassUpdates().collect { _currentCompassReading.value = it }
